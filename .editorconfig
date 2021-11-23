@@ -1,0 +1,16 @@
+﻿[*.cs]
+
+# IDE0022: Usar cuerpo del bloque para los métodos
+csharp_style_expression_bodied_methods = when_on_single_line
+
+# CS1591: Falta el comentario XML para el tipo o miembro visible públicamente
+dotnet_diagnostic.CS1591.severity = silent
+
+# CS8618: Un campo que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de declararlo como que admite un valor NULL.
+dotnet_diagnostic.CS8618.severity = none
+
+# CS8604: Posible argumento de referencia nulo
+dotnet_diagnostic.CS8604.severity = none
+
+# SYSLIB0021: El tipo o el miembro están obsoletos
+dotnet_diagnostic.SYSLIB0021.severity = none

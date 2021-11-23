@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using WebAPICrudPokemon.Domain.Contracts;
 using WebAPICrudPokemon.Helper;
 using WebAPICrudPokemon.Models;
 
@@ -9,9 +10,9 @@ public class AuthenticationRepository : IAuthenticationRepository
     private readonly IMongoCollection<User> UserCollection;
     private readonly FilterDefinitionBuilder<User> FilterBuilder = Builders<User>.Filter;
 
-    public AuthenticationRepository(IMongoClient client, string DatabaseName)
+    public AuthenticationRepository(IMongoClient client, string databaseName)
     {
-        IMongoDatabase database = client.GetDatabase(DatabaseName);
+        IMongoDatabase database = client.GetDatabase(databaseName);
         UserCollection = database.GetCollection<User>(nameof(User));
     }
 

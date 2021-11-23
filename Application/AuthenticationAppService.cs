@@ -1,4 +1,5 @@
-﻿using WebAPICrudPokemon.Domain;
+﻿using WebAPICrudPokemon.Application.Contracts;
+using WebAPICrudPokemon.Domain.Contracts;
 using WebAPICrudPokemon.DTO;
 using WebAPICrudPokemon.Helper;
 using WebAPICrudPokemon.Settings;

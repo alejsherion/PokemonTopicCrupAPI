@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using WebAPICrudPokemon.Domain.Contracts;
 using WebAPICrudPokemon.Models;
 using WebAPICrudPokemon.Settings;
 
@@ -20,9 +21,9 @@ namespace WebAPICrudPokemon.Domain
         private readonly IMongoCollection<Pokemon> PokemonCollection;
         private readonly FilterDefinitionBuilder<Pokemon> FilterBuilder = Builders<Pokemon>.Filter;
 
-        public PokemonRepository(IMongoClient client, string DatabaseName)
+        public PokemonRepository(IMongoClient client, string databaseName)
         {
-            IMongoDatabase database = client.GetDatabase(DatabaseName);
+            IMongoDatabase database = client.GetDatabase(databaseName);
             PokemonCollection = database.GetCollection<Pokemon>(nameof(Pokemon));
 
             InitialLoadPokemonsAsync();

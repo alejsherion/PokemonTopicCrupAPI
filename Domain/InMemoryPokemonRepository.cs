@@ -1,4 +1,5 @@
-﻿using WebAPICrudPokemon.Helper;
+﻿using WebAPICrudPokemon.Domain.Contracts;
+using WebAPICrudPokemon.Helper;
 using WebAPICrudPokemon.Models;
 
 namespace WebAPICrudPokemon.Domain;
@@ -43,5 +44,5 @@ public class InMemoryPokemonRepository : IPokemonRepository
         await Task.CompletedTask;
     }
 
-    public Task RemoveAllAsync() => throw new NotImplementedException();
+    public Task RemoveAllAsync(string user) => throw new NotImplementedException();
 }

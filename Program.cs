@@ -6,7 +6,9 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using System.Text;
 using WebAPICrudPokemon.Application;
+using WebAPICrudPokemon.Application.Contracts;
 using WebAPICrudPokemon.Domain;
+using WebAPICrudPokemon.Domain.Contracts;
 using WebAPICrudPokemon.Helper;
 using WebAPICrudPokemon.Settings;
 
@@ -46,10 +48,12 @@ builder.Services.AddHttpContextAccessor();
 // Add mongo client
 builder.Services.AddSingleton<IMongoClient>(servicesProvider => new MongoClient(mongoDBSettings.ConnectionString));
 // Add services to the container.
+builder.Services.AddSingleton<ILikeAppService, LikeAppService>();
 builder.Services.AddSingleton<IAuthenticationAppService, AuthenticationAppService>();
 builder.Services.AddSingleton<IPokemonAppService, PokemonAppService>();
 //builder.Services.AddSingleton<IPokemonRepository, InMemoryPokemonRepository>();
 // Add Repositories
+builder.Services.AddSingleton<ILikeRepository>(repo => new LikeRepository(repo.GetService<IMongoClient>(), mongoDBSettings.DataBaseName));
 builder.Services.AddSingleton<IAuthenticationRepository>(repo => new AuthenticationRepository(repo.GetService<IMongoClient>(), mongoDBSettings.DataBaseName));
 builder.Services.AddSingleton<IPokemonRepository>(repo => new PokemonRepository(repo.GetService<IMongoClient>(), mongoDBSettings.DataBaseName));
 // Add Controllers

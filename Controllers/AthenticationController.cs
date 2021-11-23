@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAPICrudPokemon.Application;
+using WebAPICrudPokemon.Application.Contracts;
 using WebAPICrudPokemon.DTO;
 
 namespace WebAPICrudPokemon.Controllers;

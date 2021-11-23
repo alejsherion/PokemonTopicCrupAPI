@@ -1,6 +1,6 @@
 ﻿using WebAPICrudPokemon.Models;
 
-namespace WebAPICrudPokemon.Domain;
+namespace WebAPICrudPokemon.Domain.Contracts;
 
 public interface IPokemonRepository
 {

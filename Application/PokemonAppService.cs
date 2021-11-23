@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System.Security.Claims;
-using WebAPICrudPokemon.Domain;
+using WebAPICrudPokemon.Application.Contracts;
+using WebAPICrudPokemon.Domain.Contracts;
 using WebAPICrudPokemon.DTO;
 using WebAPICrudPokemon.Helper;
 
@@ -48,7 +48,7 @@ public class PokemonAppService : IPokemonAppService
             {
                 var currentUser = requestHandler.GetCurrentUser();
 
-                if (pokemon.CreateBy != currentUser)
+                if (pokemon.CreateBy != currentUser && pokemon.CreateBy != "Public")
                     return ResponseResult<PokemonDTO>.SetUnSuccessfully("User can't get information of the pokemon that are not his own");
             }
 
@@ -69,7 +69,7 @@ public class PokemonAppService : IPokemonAppService
             {
                 var currentUser = requestHandler.GetCurrentUser();
 
-                if (pokemon.CreateBy != currentUser)
+                if (pokemon.CreateBy != currentUser && pokemon.CreateBy != "Public")
                     return ResponseResult<PokemonDTO>.SetUnSuccessfully("User can't get information of the pokemon that are not his own");
             }
 

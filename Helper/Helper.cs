@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using WebAPICrudPokemon.DTO;
 using WebAPICrudPokemon.Models;
-using System.Security.Cryptography;
-using System.Security.Claims;
 
 namespace WebAPICrudPokemon.Helper;
 
@@ -22,6 +21,19 @@ public static class Extensions
 {
     public static bool IsNull(this object o)
         => o == null ?  throw new ArgumentNullException(nameof(o)) : true; 
+
+    public static LikeDTO ToDTO(this Like l)
+    {
+        if (l == null) return null;
+
+        return new()
+        {
+            Id = l.Id,
+            PokemonId = l.PokemonId,
+            User = l.User,
+            CreateAt = l.CreateAt
+        };
+    }
 
     public static PokemonDTO ToDTO(this Pokemon p)
     {

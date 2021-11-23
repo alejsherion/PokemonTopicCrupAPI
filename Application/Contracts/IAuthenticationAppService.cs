@@ -1,7 +1,7 @@
 ﻿using WebAPICrudPokemon.DTO;
 using WebAPICrudPokemon.Helper;
 
-namespace WebAPICrudPokemon.Application;
+namespace WebAPICrudPokemon.Application.Contracts;
 
 public interface IAuthenticationAppService
 {

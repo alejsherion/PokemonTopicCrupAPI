@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using WebAPICrudPokemon.Application;
+using WebAPICrudPokemon.Application.Contracts;
 using WebAPICrudPokemon.DTO;
-using WebAPICrudPokemon.Helper;
 
 namespace WebAPICrudPokemon.Controllers;
 
@@ -22,7 +20,7 @@ public class PokemonController : ControllerBase
     public async Task<ActionResult<IEnumerable<PokemonDTO>>> GetAsync()
     {
         var result = await service.GetPokemonsAsync();
-        if (result.IsError)
+        if (result.IsError || !result.IsSuccessful)
             return BadRequest(result.Message);
 
         return Ok(result.Result);
@@ -33,7 +31,7 @@ public class PokemonController : ControllerBase
     public async Task<ActionResult<PokemonDTO>> GetByIdAsync(Guid id)
     {
         var result = await service.GetAsync(id);
-        if (result.IsError)
+        if (result.IsError || !result.IsSuccessful)
             return BadRequest(result.Message);
 
         return Ok(result.Result);
@@ -44,7 +42,7 @@ public class PokemonController : ControllerBase
     public async Task<ActionResult> Add(CreatePokemonDTO pokemonDTO)
     {
         var result = await service.AddAsync(pokemonDTO);
-        if (result.IsError)
+        if (result.IsError || !result.IsSuccessful)
             return BadRequest(result.Message);
 
         return CreatedAtAction(nameof(GetByIdAsync), new { _id = result.Result.Id }, result.Result);
@@ -54,32 +52,46 @@ public class PokemonController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateAsync(Guid id, UpdatePokemonDTO pokemonDTO)
     {
-        var resul = await service.UpdateAsync(id, pokemonDTO);
-        if (resul.IsError)
-            return BadRequest(resul.Message);
-        if (!resul.IsSuccessful)
-            return NotFound();
+        var result = await service.UpdateAsync(id, pokemonDTO);
+        if (result.IsError)
+            return BadRequest(result.Message);
+        if (!result.IsSuccessful)
+            return NotFound(result.Message);
 
-        return Ok(resul.Result);
+        return Ok(result.Result);
     }
 
     // DELETE / pokemons / {id}
     [HttpDelete("{id}")]
     public async Task<ActionResult> RemoveAsync(Guid id)
     {
-        var resul = await service.RemoveAsync(id);
-        if (resul.IsError)
-            return BadRequest(resul.Message);
-        if (!resul.IsSuccessful)
-            return NotFound();
+        var result = await service.RemoveAsync(id);
+        if (result.IsError)
+            return BadRequest(result.Message);
+        if (!result.IsSuccessful)
+            return NotFound(result.Message);
 
-        return Ok(resul.Result);
+        return Ok();
+    }
+
+    // DELETE / pokemons
+    [HttpDelete()]
+    [Route("RemoveAllOwn")]
+    public async Task<ActionResult> RemoveAllOwnAsync()
+    {
+        var result = await service.RemoveAllOwnAsync();
+        if (result.IsError)
+            return BadRequest(result.Message);
+        if (!result.IsSuccessful)
+            return NotFound(result.Message);
+
+        return Ok();
     }
 
     // GET / GetInfoPokeAPIAsync / pokemonName
     [AllowAnonymous]
     [HttpGet]
-    [Route("GetInfoPokeAPIAsync")]
+    [Route("GetInfoPokeAPI")]
     public async Task<ActionResult> GetInfoPokeAPIAsync(string pokemonName)
     {
         var result = await service.GetInfoPokeAPIAsync(pokemonName);

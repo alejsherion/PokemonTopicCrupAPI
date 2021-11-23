@@ -12,8 +12,8 @@ public class AuthenticationAppService : IAuthenticationAppService
 
     public AuthenticationAppService(IAuthenticationRepository _authenticationRepository, IJWTAuthenticationManager _authenticationManager)
     {
-        authenticationRepository = _authenticationRepository;
-        authenticationManager = _authenticationManager;
+        authenticationRepository = _authenticationRepository ?? throw new ArgumentNullException(nameof(IAuthenticationRepository));
+        authenticationManager = _authenticationManager ?? throw new ArgumentNullException(nameof(IJWTAuthenticationManager));
     }
 
     public async Task<ResponseResult<UserDTO>> SignIn(UserDTO user)
@@ -22,11 +22,11 @@ public class AuthenticationAppService : IAuthenticationAppService
         {
             var userValid = await authenticationRepository.SignIn(user.Email, user.Password);
             if (!userValid.IsSuccessful)
-                return ResponseResult<UserDTO>.SetUnSuccess(userValid.Message);
+                return ResponseResult<UserDTO>.SetUnSuccessfully(userValid.Message);
 
             user.Token = authenticationManager.Authentication(user.Email);
             
-            return ResponseResult<UserDTO>.SetSuccess(user);
+            return ResponseResult<UserDTO>.SetSuccessfully(user);
         }
         catch (Exception ex)
         {
@@ -39,7 +39,7 @@ public class AuthenticationAppService : IAuthenticationAppService
         try
         { 
             var result = await authenticationRepository.SignUp(user.Email, user.Password);
-            return ResponseResult<dynamic>.SetSuccess(null);
+            return ResponseResult<dynamic>.SetSuccessfully();
         }
         catch (Exception ex)
         {

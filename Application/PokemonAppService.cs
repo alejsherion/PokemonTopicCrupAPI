@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Security.Claims;
 using WebAPICrudPokemon.Domain;
 using WebAPICrudPokemon.DTO;
 using WebAPICrudPokemon.Helper;
@@ -10,21 +11,27 @@ public class PokemonAppService : IPokemonAppService
     private readonly HttpClient client;
 
     private readonly IPokemonRepository pokemonRepository;
+    private readonly RequestHandler requestHandler;
 
-    public PokemonAppService(IPokemonRepository _pokemonRepository)
+    public PokemonAppService(IPokemonRepository _pokemonRepository, RequestHandler _requestHandler)
     {
-        pokemonRepository = _pokemonRepository;
+        pokemonRepository = _pokemonRepository ?? throw new ArgumentNullException(nameof(IPokemonRepository));
+        requestHandler = _requestHandler;
 
-        client = new HttpClient();
-    }
+        client = new HttpClient();}
 
     public async Task<ResponseResult<IEnumerable<PokemonDTO>>> GetPokemonsAsync()
     {
         try
         {
-            var pokemons = (await pokemonRepository.GetPokemonsAsync()).Select(pokemon => pokemon.ToDTO());
-            
-            return ResponseResult<IEnumerable<PokemonDTO>>.SetSuccess(pokemons); ;
+            var pokemons = (await pokemonRepository.GetPokemonsAsync());
+            var currentUser = requestHandler.GetCurrentUser();
+
+            var pokemonsResult = pokemons
+                .Where(p => p.CreateBy == "Public" || p.CreateBy == currentUser)
+                .Select(pokemon => pokemon.ToDTO());
+
+            return ResponseResult<IEnumerable<PokemonDTO>>.SetSuccessfully(pokemonsResult); ;
         }
         catch (Exception ex)
         {
@@ -36,9 +43,16 @@ public class PokemonAppService : IPokemonAppService
     {
         try
         {
-            var pokemons = (await pokemonRepository.GetAsync(id)).ToDTO();
+            var pokemon = await pokemonRepository.GetAsync(id);
+            if (pokemon is not null)
+            {
+                var currentUser = requestHandler.GetCurrentUser();
 
-            return ResponseResult<PokemonDTO>.SetSuccess(pokemons); ;
+                if (pokemon.CreateBy != currentUser)
+                    return ResponseResult<PokemonDTO>.SetUnSuccessfully("User can't get information of the pokemon that are not his own");
+            }
+
+            return ResponseResult<PokemonDTO>.SetSuccessfully(pokemon.ToDTO());
         }
         catch (Exception ex)
         {
@@ -50,9 +64,16 @@ public class PokemonAppService : IPokemonAppService
     {
         try
         {
-            var pokemons = (await pokemonRepository.GetByNameAsync(name)).ToDTO();
+            var pokemon = await pokemonRepository.GetByNameAsync(name);
+            if (pokemon is not null)
+            {
+                var currentUser = requestHandler.GetCurrentUser();
 
-            return ResponseResult<PokemonDTO>.SetSuccess(pokemons); ;
+                if (pokemon.CreateBy != currentUser)
+                    return ResponseResult<PokemonDTO>.SetUnSuccessfully("User can't get information of the pokemon that are not his own");
+            }
+
+            return ResponseResult<PokemonDTO>.SetSuccessfully(pokemon.ToDTO()); ;
         }
         catch (Exception ex)
         {
@@ -67,9 +88,12 @@ public class PokemonAppService : IPokemonAppService
             pokemon.IsNull();
 
             var savedPokemon = pokemon.ToEntity();
+            var currentUser = requestHandler.GetCurrentUser();
+            savedPokemon.CreateBy = currentUser;
+            
             await pokemonRepository.AddAsync(savedPokemon);
 
-            return ResponseResult<PokemonDTO>.SetSuccess(savedPokemon.ToDTO());
+            return ResponseResult<PokemonDTO>.SetSuccessfully(savedPokemon.ToDTO());
         }
         catch (Exception ex)
         {
@@ -87,11 +111,15 @@ public class PokemonAppService : IPokemonAppService
 
             var existPokemon = await pokemonRepository.GetAsync(id);
             if (existPokemon == null)
-                return ResponseResult<PokemonDTO>.SetUnSuccess("Pokemon unexist");
+                return ResponseResult<PokemonDTO>.SetUnSuccessfully("Pokemon unexist");
+
+            var currentUser = requestHandler.GetCurrentUser();
+            if (existPokemon.CreateBy != currentUser)
+                return ResponseResult<PokemonDTO>.SetUnSuccessfully("User can't modify the pokemon that are not his own");
 
             await pokemonRepository.UpdateAsync(pokemon.ToEntity());
 
-            return ResponseResult<PokemonDTO>.SetSuccess(null);
+            return ResponseResult<PokemonDTO>.SetSuccessfully();
         }
         catch (Exception ex)
         {
@@ -108,18 +136,38 @@ public class PokemonAppService : IPokemonAppService
 
             var existPokemon = await pokemonRepository.GetAsync(id);
             if (existPokemon == null)
-                return ResponseResult<PokemonDTO>.SetUnSuccess("Pokemon unexist");
+                return ResponseResult<PokemonDTO>.SetUnSuccessfully("Pokemon unexist");
+
+            var currentUser = requestHandler.GetCurrentUser();
+            if (existPokemon.CreateBy != currentUser)
+                return ResponseResult<PokemonDTO>.SetUnSuccessfully("User can't remove the pokemon that are not his own");
 
             await pokemonRepository.RemoveAsync(existPokemon);
 
-            return ResponseResult<PokemonDTO>.SetSuccess(null);
+            return ResponseResult<PokemonDTO>.SetSuccessfully();
         }
         catch (Exception ex)
         {
             return ResponseResult<PokemonDTO>.SetError(ex.Message);
         }
     }
-    
+
+    public async Task<ResponseResult<PokemonDTO>> RemoveAllOwnAsync()
+    {
+        try
+        {
+            var currentUser = requestHandler.GetCurrentUser();
+            
+            await pokemonRepository.RemoveAllAsync(currentUser);
+            
+            return ResponseResult<PokemonDTO>.SetSuccessfully();
+        }
+        catch (Exception ex)
+        {
+            return ResponseResult<PokemonDTO>.SetError(ex.Message);
+        }
+    }
+
     public async Task<ResponseResult<PokemonResultAPIDTO>> GetInfoPokeAPIAsync(string pokemonName)
     {
         try
@@ -134,12 +182,13 @@ public class PokemonAppService : IPokemonAppService
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                     return ResponseResult<PokemonResultAPIDTO>.SetError(serviceResponse);
 
-                return ResponseResult<PokemonResultAPIDTO>.SetSuccess(JsonConvert.DeserializeObject<PokemonResultAPIDTO>(serviceResponse));
+                return ResponseResult<PokemonResultAPIDTO>.SetSuccessfully(JsonConvert.DeserializeObject<PokemonResultAPIDTO>(serviceResponse));
             }
         }
         catch (Exception ex)
         {
             return ResponseResult<PokemonResultAPIDTO>.SetError(ex.Message);
         }
-    } 
+    }
+
 }

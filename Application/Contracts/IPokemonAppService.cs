@@ -17,5 +17,7 @@ public interface IPokemonAppService
 
     Task<ResponseResult<PokemonDTO>> RemoveAsync(Guid id);
 
+    Task<ResponseResult<PokemonDTO>> RemoveAllOwnAsync();
+
     Task<ResponseResult<PokemonResultAPIDTO>> GetInfoPokeAPIAsync(string pokemonName);
 }

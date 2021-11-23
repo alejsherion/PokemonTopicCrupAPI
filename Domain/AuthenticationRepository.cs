@@ -20,11 +20,11 @@ public class AuthenticationRepository : IAuthenticationRepository
         var filter = FilterBuilder.Eq(user => user.Email, email);
         var registeredUser = (await UserCollection.FindAsync(filter)).FirstOrDefault();
         if (registeredUser is null)
-            return ResponseResult<User>.SetUnSuccess("Unregistered user");
+            return ResponseResult<User>.SetUnSuccessfully("Unregistered user");
         if (registeredUser.Password != Crypt.Encrypt(password))
-            return ResponseResult<User>.SetUnSuccess("Invalid password");
+            return ResponseResult<User>.SetUnSuccessfully("Invalid password");
 
-        return ResponseResult<User>.SetSuccess(registeredUser);
+        return ResponseResult<User>.SetSuccessfully(registeredUser);
     }
 
     public async Task<ResponseResult<User>> SignUp(string email, string password)
@@ -32,10 +32,10 @@ public class AuthenticationRepository : IAuthenticationRepository
         var filter = FilterBuilder.Eq(user => user.Email, email);
         var registeredUser = (await UserCollection.FindAsync(filter)).FirstOrDefault();
         if (registeredUser is not null)
-            return ResponseResult<User>.SetUnSuccess("User Already registered!");
+            return ResponseResult<User>.SetUnSuccessfully("User Already registered!");
         
         var newUser = new User() { Email = email, Password = Crypt.Encrypt(password) };
         await UserCollection.InsertOneAsync(newUser);
-        return ResponseResult<User>.SetSuccess(newUser);
+        return ResponseResult<User>.SetSuccessfully(newUser);
     }
 }

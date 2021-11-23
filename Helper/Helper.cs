@@ -3,8 +3,20 @@ using System.Text;
 using WebAPICrudPokemon.DTO;
 using WebAPICrudPokemon.Models;
 using System.Security.Cryptography;
+using System.Security.Claims;
 
 namespace WebAPICrudPokemon.Helper;
+
+public class RequestHandler
+{
+    private readonly IHttpContextAccessor httpContextAccessor;
+    public RequestHandler(IHttpContextAccessor _httpContextAcessor)
+        => httpContextAccessor = _httpContextAcessor ?? throw new ArgumentNullException(nameof(IHttpContextAccessor));
+
+    internal string GetCurrentUser()
+        => httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+}
+
 
 public static class Extensions
 {
@@ -13,6 +25,8 @@ public static class Extensions
 
     public static PokemonDTO ToDTO(this Pokemon p)
     {
+        if (p == null) return null;
+
         return new ()
         {
             Id = p.Id,
@@ -144,7 +158,8 @@ public class ResponseResult<T>
         Message = _message;
     }
 
-    public static ResponseResult<T> SetSuccess(T result) => new(true, "", result);
-    public static ResponseResult<T> SetUnSuccess(string message) => new(false, false, message);
+    public static ResponseResult<T> SetSuccessfully() => new(true, false, "");
+    public static ResponseResult<T> SetSuccessfully(T result) => new(true, "", result);
+    public static ResponseResult<T> SetUnSuccessfully(string message) => new(false, false, message);
     public static ResponseResult<T> SetError(string message) => new(false, true, message);
 }

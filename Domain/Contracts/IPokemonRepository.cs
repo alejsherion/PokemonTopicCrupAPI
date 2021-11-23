@@ -15,4 +15,6 @@ public interface IPokemonRepository
     Task UpdateAsync(Pokemon pokemon);
 
     Task RemoveAsync(Pokemon pokemon);
+
+    Task RemoveAllAsync(string user);
 }

@@ -22,7 +22,7 @@ public class InMemoryPokemonRepository : IPokemonRepository
         => await Task.FromResult(InMemoryPokemons.FirstOrDefault(p => p.Id == id));
 
     public async Task<Pokemon> GetByNameAsync(string name)
-        => await Task.FromResult(InMemoryPokemons.SingleOrDefault(p => p.Name == name));
+        => await Task.FromResult(InMemoryPokemons.FirstOrDefault(p => p.Name == name));
 
     public async Task AddAsync(Pokemon pokemon)
     {
@@ -42,4 +42,6 @@ public class InMemoryPokemonRepository : IPokemonRepository
         InMemoryPokemons.Remove(pokemon);
         await Task.CompletedTask;
     }
+
+    public Task RemoveAllAsync() => throw new NotImplementedException();
 }

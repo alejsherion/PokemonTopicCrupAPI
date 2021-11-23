@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebAPICrudPokemon.Application;
 using WebAPICrudPokemon.DTO;
+using WebAPICrudPokemon.Helper;
 
 namespace WebAPICrudPokemon.Controllers;
 
@@ -14,15 +15,12 @@ public class PokemonController : ControllerBase
     private readonly IPokemonAppService service;
 
     public PokemonController(IPokemonAppService _service)
-        => service = _service;
+        => service = _service ?? throw new ArgumentNullException(nameof(IPokemonAppService));
 
     // GET / Pokemons
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PokemonDTO>>> GetAsync()
     {
-        
-        var user = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-
         var result = await service.GetPokemonsAsync();
         if (result.IsError)
             return BadRequest(result.Message);
@@ -49,7 +47,7 @@ public class PokemonController : ControllerBase
         if (result.IsError)
             return BadRequest(result.Message);
 
-        return CreatedAtAction(nameof(GetByIdAsync), new { _id = result.Result.Id },result.Result);
+        return CreatedAtAction(nameof(GetByIdAsync), new { _id = result.Result.Id }, result.Result);
     }
 
     // PUT / pokemons / {id}

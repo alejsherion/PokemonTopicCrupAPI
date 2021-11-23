@@ -14,3 +14,9 @@ dotnet_diagnostic.CS8604.severity = none
 
 # SYSLIB0021: El tipo o el miembro están obsoletos
 dotnet_diagnostic.SYSLIB0021.severity = none
+
+# CS8602: Desreferencia de una referencia posiblemente NULL.
+dotnet_diagnostic.CS8602.severity = none
+
+# CA2208: Crear instancias de las excepciones del argumento correctamente
+dotnet_diagnostic.CA2208.severity = none

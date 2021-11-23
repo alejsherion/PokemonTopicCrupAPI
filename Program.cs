@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using System.Text;
 using WebAPICrudPokemon.Application;
 using WebAPICrudPokemon.Domain;
+using WebAPICrudPokemon.Helper;
 using WebAPICrudPokemon.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,16 +40,19 @@ builder.Services.AddAuthentication(auth =>
 });
 builder.Services.AddSingleton<IJWTAuthenticationManager>(new JWTAuthenticationManager(AuthKey));
 
+builder.Services.AddSingleton<RequestHandler>();
+builder.Services.AddHttpContextAccessor();
+
 // Add mongo client
 builder.Services.AddSingleton<IMongoClient>(servicesProvider => new MongoClient(mongoDBSettings.ConnectionString));
-
 // Add services to the container.
 builder.Services.AddSingleton<IAuthenticationAppService, AuthenticationAppService>();
 builder.Services.AddSingleton<IPokemonAppService, PokemonAppService>();
 //builder.Services.AddSingleton<IPokemonRepository, InMemoryPokemonRepository>();
+// Add Repositories
 builder.Services.AddSingleton<IAuthenticationRepository>(repo => new AuthenticationRepository(repo.GetService<IMongoClient>(), mongoDBSettings.DataBaseName));
 builder.Services.AddSingleton<IPokemonRepository>(repo => new PokemonRepository(repo.GetService<IMongoClient>(), mongoDBSettings.DataBaseName));
-
+// Add Controllers
 builder.Services.AddControllers(controllers => controllers.SuppressAsyncSuffixInActionNames = false);
             
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

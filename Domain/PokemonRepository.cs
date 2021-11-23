@@ -41,13 +41,13 @@ namespace WebAPICrudPokemon.Domain
         public async Task<Pokemon> GetAsync(Guid id)
         {
             var filter = FilterBuilder.Eq(pokemon => pokemon.Id, id);
-            return (await PokemonCollection.FindAsync(filter)).SingleOrDefault();
+            return (await PokemonCollection.FindAsync(filter)).FirstOrDefault();
         }
 
         public async Task<Pokemon> GetByNameAsync(string name)
         {
             var filter = FilterBuilder.Eq(pokemon => pokemon.Name, name);
-            return (await PokemonCollection.FindAsync(filter)).SingleOrDefault();
+            return (await PokemonCollection.FindAsync(filter)).FirstOrDefault();
         }
 
         public async Task AddAsync(Pokemon pokemon) 
@@ -63,6 +63,12 @@ namespace WebAPICrudPokemon.Domain
         {
             var filter = FilterBuilder.Eq(pokemon => pokemon.Id, pokemon.Id);
             await PokemonCollection.DeleteOneAsync(filter);
+        }
+
+        public async Task RemoveAllAsync(string user)
+        {
+            var filter = FilterBuilder.Eq(pokemon => pokemon.CreateBy, user);
+            await PokemonCollection.DeleteManyAsync(filter);
         }
     }
 }

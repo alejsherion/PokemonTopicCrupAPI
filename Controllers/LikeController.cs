@@ -17,7 +17,7 @@ public class LikeController : Controller
 
     // GET / Like
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LikeDTO>>> GetLikesAsync()
+    public async Task<ActionResult<PagintaionResultDTO<LikeDTO>>> GetLikesAsync()
     {
         var result = await service.GetLikesAsync();
         if (result.IsError || !result.IsSuccessful)

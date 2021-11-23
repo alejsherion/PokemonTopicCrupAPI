@@ -5,7 +5,7 @@ namespace WebAPICrudPokemon.Application.Contracts;
 
 public interface ILikeAppService
 {
-    Task<ResponseResult<IEnumerable<LikeDTO>>> GetLikesAsync();
+    Task<ResponseResult<PagintaionResultDTO<LikeDTO>>> GetLikesAsync();
 
     Task<ResponseResult<LikeDTO>> LikedAsync(CreateLikeDTO like);
 

@@ -18,9 +18,10 @@ public class PokemonAppService : IPokemonAppService
         pokemonRepository = _pokemonRepository ?? throw new ArgumentNullException(nameof(IPokemonRepository));
         requestHandler = _requestHandler;
 
-        client = new HttpClient();}
+        client = new HttpClient();
+    }
 
-    public async Task<ResponseResult<IEnumerable<PokemonDTO>>> GetPokemonsAsync()
+    public async Task<ResponseResult<PagintaionResultDTO<PokemonDTO>>> GetPokemonsAsync()
     {
         try
         {
@@ -31,11 +32,20 @@ public class PokemonAppService : IPokemonAppService
                 .Where(p => p.CreateBy == "Public" || p.CreateBy == currentUser)
                 .Select(pokemon => pokemon.ToDTO());
 
-            return ResponseResult<IEnumerable<PokemonDTO>>.SetSuccessfully(pokemonsResult); ;
+            var pagination = requestHandler.GetInfoPagination();
+            var result = new PagintaionResultDTO<PokemonDTO>()
+            {
+                Page = pagination != null ? pagination.Page : 1,
+                Records = pagination != null ? pagination.Records : pokemonsResult.Count(),
+                PagesCount = pagination != null ? (int)Math.Ceiling(Convert.ToDecimal(pokemonsResult.Count() / pagination.Records)) : 1,
+                Result = pagination != null ? pokemonsResult.Skip((pagination.Page - 1) * pagination.Records).Take(pagination.Records) : pokemonsResult
+            };
+            
+            return ResponseResult<PagintaionResultDTO<PokemonDTO>>.SetSuccessfully(result);
         }
         catch (Exception ex)
         {
-            return ResponseResult<IEnumerable<PokemonDTO>>.SetError(ex.Message);
+            return ResponseResult<PagintaionResultDTO<PokemonDTO>>.SetError(ex.Message);
         }
     }
 
@@ -90,7 +100,7 @@ public class PokemonAppService : IPokemonAppService
             var savedPokemon = pokemon.ToEntity();
             var currentUser = requestHandler.GetCurrentUser();
             savedPokemon.CreateBy = currentUser;
-            
+
             await pokemonRepository.AddAsync(savedPokemon);
 
             return ResponseResult<PokemonDTO>.SetSuccessfully(savedPokemon.ToDTO());
@@ -157,9 +167,9 @@ public class PokemonAppService : IPokemonAppService
         try
         {
             var currentUser = requestHandler.GetCurrentUser();
-            
+
             await pokemonRepository.RemoveAllAsync(currentUser);
-            
+
             return ResponseResult<PokemonDTO>.SetSuccessfully();
         }
         catch (Exception ex)

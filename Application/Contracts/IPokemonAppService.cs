@@ -5,7 +5,7 @@ namespace WebAPICrudPokemon.Application.Contracts;
 
 public interface IPokemonAppService
 {
-    Task<ResponseResult<IEnumerable<PokemonDTO>>> GetPokemonsAsync();
+    Task<ResponseResult<PagintaionResultDTO<PokemonDTO>>> GetPokemonsAsync();
 
     Task<ResponseResult<PokemonDTO>> GetAsync(Guid id);
 

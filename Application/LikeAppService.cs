@@ -21,20 +21,30 @@ public class LikeAppService : ILikeAppService
         requestHandler = _requestHandler;
     }
 
-    public async Task<ResponseResult<IEnumerable<LikeDTO>>> GetLikesAsync()
+    public async Task<ResponseResult<PagintaionResultDTO<LikeDTO>>> GetLikesAsync()
     {
         try
         {
             var currentUser = requestHandler.GetCurrentUser();
 
-            var result = (await likeRepository.GetLikesAsync(currentUser))
+            var likesResult = (await likeRepository.GetLikesAsync(currentUser))
                 .Select(like => like.ToDTO());
 
-            return ResponseResult<IEnumerable<LikeDTO>>.SetSuccessfully(result);
+
+            var pagination = requestHandler.GetInfoPagination();
+            var result = new PagintaionResultDTO<LikeDTO>()
+            {
+                Page = pagination != null ? pagination.Page : 1,
+                Records = pagination != null ? pagination.Records : likesResult.Count(),
+                PagesCount = pagination != null ? (int)Math.Ceiling(Convert.ToDecimal(likesResult.Count() / pagination.Records)) : 1,
+                Result = pagination != null ? likesResult.Skip((pagination.Page - 1) * pagination.Records).Take(pagination.Records) : likesResult
+            };
+
+            return ResponseResult<PagintaionResultDTO<LikeDTO>>.SetSuccessfully(result);
         }
         catch (Exception ex)
         {
-            return ResponseResult<IEnumerable<LikeDTO>>.SetError(ex.Message);
+            return ResponseResult<PagintaionResultDTO<LikeDTO>>.SetError(ex.Message);
         }
     }
 

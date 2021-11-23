@@ -17,7 +17,7 @@ public class PokemonController : ControllerBase
 
     // GET / Pokemons
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PokemonDTO>>> GetAsync()
+    public async Task<ActionResult<PagintaionResultDTO<PokemonDTO>>> GetAsync()
     {
         var result = await service.GetPokemonsAsync();
         if (result.IsError || !result.IsSuccessful)

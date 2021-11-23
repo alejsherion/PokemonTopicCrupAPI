@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Newtonsoft.Json;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using WebAPICrudPokemon.DTO;
@@ -14,8 +15,18 @@ public class RequestHandler
 
     internal string GetCurrentUser()
         => httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-}
 
+    internal Pagination? GetInfoPagination()
+    {
+        httpContextAccessor.HttpContext.Request.Headers.TryGetValue("Pagination", out Microsoft.Extensions.Primitives.StringValues page);
+        if (String.IsNullOrEmpty(page.ToString()))
+            return null;
+
+        var pagination = JsonConvert.DeserializeObject<Pagination>(page.ToString());
+
+        return pagination;
+    }
+}
 
 public static class Extensions
 {

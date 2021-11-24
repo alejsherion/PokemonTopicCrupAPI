@@ -483,11 +483,82 @@ dotnet user-secrets set MongoDbSetting:Password somePassword
 ``` 
 
 API Healchecks
+
+The application has the endpoints to validate its health status, verify operation and connection with the database
+
 ```
 dotnet add package AspNetCore.HealthChecks.MongoDB
 ```
 
+Application status
+```
+https://{{%URL_WEBAPI_POKEMON%}}/health/live
+```
+![Live](https://i.ibb.co/wy2wBFL/Healthy-Live.jpg)
+
+Database connection status verification
+```
+https://{{%URL_WEBAPI_POKEMON%}}/health/ready
+```
+![Live](https://i.ibb.co/MGGZx7h/Healthy-Ready.jpg)
+
 ## External Client Usability
+
+An external Rest API was used that provides detailed information about the Pokemon
+As they describe it themselves in their API
+
+>This is a full RESTful API linked to an extensive database detailing everything about the Pokémon main game series.
+We've covered everything from Pokémon to Berry Flavors.
+
+```
+https://pokeapi.co/
+```
+
+And this Documentation
+```
+https://pokeapi.co/docs/v2
+```
+
+In this way it was implemented, but information was filtered by the most relevant properties related to a specific Pokemon
+
+**Pokemon Controller**
+
+* GetInfoPokeAPI
+>Method: GET
+
+>Controller: Pokemon
+
+>Content-Type: application/json
+```url
+https://{{%URL_WEBAPI_POKEMON%}}/Pokemon/GetInfoPokeAPI?pokemonName={namepokemon}
+```
+Response **Status 200 OK**
+```yaml
+{
+    "id": 132,
+    "height": 3,
+    "weight": 40,
+    "location_area_enconunters": null,
+    "name": "ditto",
+    "order": 203,
+    "sprites": {
+        "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/132.png",
+        "back_female": null,
+        "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/132.png",
+        "back_shiny_female": null,
+        "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
+        "front_female": null,
+        "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png",
+        "front_shiny_female": null
+    }
+}
+```
+![Sprite2](https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png)
+![Sprite1](https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/132.png)
+![Sprite2](https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/132.png)
+![Sprite2](https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/132.png)
+
+![GetInfoPokeAPI](https://i.ibb.co/d6WxbG7/Pokemon-Get-Info-Poke-API.jpg)
 
 
 ## License 

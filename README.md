@@ -84,9 +84,12 @@ The API provides the collection used in Postman as an aid.
 Authentication controller is for registering users and logging in for API consumption
 
 * Sign Up
-Method: POST
-Controller: Authentication
-Content-Type: application/json
+
+>Method: POST
+
+>Controller: Authentication
+
+>Content-Type: application/json
 ```url
 https://{{%URL_WEBAPI_POKEMON%}}/Athentication/SignIn
 ```
@@ -105,9 +108,12 @@ User created successfully!
 ![Sign Up](https://i.ibb.co/mJnWTmg/Authentication-Sign-Up.jpg)
 
 * Sign In
-Method: POST
-Controller: Authentication
-Content-Type: application/json
+
+>Method: POST
+
+>Controller: Authentication
+
+>Content-Type: application/json
 ```url
 https://{{%URL_WEBAPI_POKEMON%}}/Athentication/SignIn
 ```

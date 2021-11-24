@@ -78,6 +78,7 @@ In case of using Postman, it is recommended to create two global variables
 The API provides the collection used in Postman as an aid.
 
 [Postman Collection]("https://go.postman.co/workspace/My-Workspace~7df5ba93-b8dc-4fe1-874c-74312556f2b2/collection/3107392-194e408b-7039-42cf-8783-09b50ac6ed75")
+https://go.postman.co/workspace/My-Workspace~7df5ba93-b8dc-4fe1-874c-74312556f2b2/collection/3107392-194e408b-7039-42cf-8783-09b50ac6ed75
 
 **Authentication Controller**
 

@@ -45,7 +45,7 @@ public class PokemonController : ControllerBase
         if (result.IsError || !result.IsSuccessful)
             return BadRequest(result.Message);
 
-        return CreatedAtAction(nameof(GetByIdAsync), new { _id = result.Result.Id }, result.Result);
+        return Ok(result.Result);
     }
 
     // PUT / pokemons / {id}

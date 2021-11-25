@@ -31,9 +31,10 @@ public class PokemonController : ControllerBase
     public async Task<ActionResult<PokemonDTO>> GetByIdAsync(Guid id)
     {
         var result = await service.GetAsync(id);
-        if (result.IsError || !result.IsSuccessful)
+        if (result.IsError)
             return BadRequest(result.Message);
-
+        if (!result.IsSuccessful)
+            return NotFound(result.Message);
         return Ok(result.Result);
     }
 

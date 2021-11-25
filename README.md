@@ -54,6 +54,10 @@ https://localhost:1701
 http://localhost:1702
 ```
 
+de otra manera podemos probar la API con la Url pública de despliegue
+
+[Public Site in Azure](https://webapicrudpokemon20211124163927.azurewebsites.net/)
+
 ![Swagger](https://i.ibb.co/dg4tgyX/Swagger.jpg)
 
 But the operation of the API is not fully functional from Swagger because all services except for authentication and integration with the external API require authentication.
@@ -78,7 +82,9 @@ In case of using Postman, it is recommended to create two global variables
 The API provides the collection used in Postman as an aid.
 
 [Postman Collection]("https://go.postman.co/workspace/My-Workspace~7df5ba93-b8dc-4fe1-874c-74312556f2b2/collection/3107392-194e408b-7039-42cf-8783-09b50ac6ed75")
+```
 https://go.postman.co/workspace/My-Workspace~7df5ba93-b8dc-4fe1-874c-74312556f2b2/collection/3107392-194e408b-7039-42cf-8783-09b50ac6ed75
+```
 
 **Authentication Controller**
 

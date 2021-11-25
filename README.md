@@ -1,7 +1,9 @@
 # Pokemon Topic Crup API
 > v 1.0
 
-DotNet aplication on WebApi for handling CRUD on pokemon do you use and can like them **Gotta Catch 'Em All**
+DotNet aplication on WebApi for handling CRUD on pokemon you use and also choosing your favorite ones through likes 
+
+**¬°Gotta Catch 'Em All!**
 
 ## Using 
 - DotNet 6.0.0
@@ -54,7 +56,7 @@ https://localhost:1701
 http://localhost:1702
 ```
 
-de otra manera podemos probar la API con la Url p˙blica de despliegue
+de otra manera podemos probar la API con la Url p√∫blica de despliegue
 
 [Public Site in Azure](https://webapicrudpokemon20211124163927.azurewebsites.net/)
 
@@ -387,7 +389,7 @@ Response **Status 200 OK**
 }
 ```
 
-This method lists all the likes associated with PokÈmon saved by the user and / or public.
+This method lists all the likes associated with Pok√©mon saved by the user and / or public.
 
 A form for paging was defined by implementing properties in the Header so that the consumption of the method was clean.
 
@@ -428,7 +430,7 @@ Response **Status 400 Not Found**
 User can't like the pokemon that are not his own or public
 ```
 
-This method lists all the likes associated with PokÈmon saved by the user and / or public.
+This method lists all the likes associated with Pok√©mon saved by the user and / or public.
 
 ![Save](https://i.ibb.co/1KTPMmn/Like-Save.jpg)
 
@@ -520,8 +522,8 @@ https://{{%URL_WEBAPI_POKEMON%}}/health/ready
 An external Rest API was used that provides detailed information about the Pokemon
 As they describe it themselves in their API
 
->This is a full RESTful API linked to an extensive database detailing everything about the PokÈmon main game series.
-We've covered everything from PokÈmon to Berry Flavors.
+>This is a full RESTful API linked to an extensive database detailing everything about the Pok√©mon main game series.
+We've covered everything from Pok√©mon to Berry Flavors.
 
 ```
 https://pokeapi.co/

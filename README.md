@@ -56,7 +56,7 @@ https://localhost:1701
 http://localhost:1702
 ```
 
-de otra manera podemos probar la API con la Url pública de despliegue
+otherwise we can test the API with the deployment public url
 
 [Public Site in Azure](https://webapicrudpokemon20211124163927.azurewebsites.net/)
 
